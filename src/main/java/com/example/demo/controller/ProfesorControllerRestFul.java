@@ -26,33 +26,34 @@ public class ProfesorControllerRestFul {
 	
 	// http://localhost:8080/API/v1.0/Matricula/profesores
 	
-	@PostMapping(path = "/guardar")
+	@PostMapping
 	public void guardar(@RequestBody Profesor profesor) {
 		this.profesorService.guardar(profesor);
 	}
 	
-	@GetMapping(path = "/buscar/{id}")
+	@GetMapping(path = "/{id}")
 	public Profesor buscar(@PathVariable Integer id) {
 		return this.profesorService.buscar(id);
 	}
 	
-	@PutMapping(path = "/actualizar")
-	public void actualizar(@RequestBody Profesor profesor) {
+	@PutMapping(path = "/{id}")
+	public void actualizar(@RequestBody Profesor profesor, @PathVariable Integer id) {
+		profesor.setId(id);
 		this.profesorService.actualizar(profesor);
 	}
 	
-	@PatchMapping(path = "/actualizarParcial")
-	public void actualizarParcial(@RequestBody Profesor profesor) {
-		this.profesorService.actualizarParcial(profesor.getId(), profesor.getNombre(), profesor.getApellido());
+	@PatchMapping(path = "/{id}")
+	public void actualizarParcial(@RequestBody Profesor profesor, @PathVariable Integer id) {
+		this.profesorService.actualizarParcial(id, profesor.getNombre(), profesor.getApellido());
 	}
 	
-	@DeleteMapping(path = "/borrar/{id}")
+	@DeleteMapping(path = "/{id}")
 	public void borrar(@PathVariable Integer id) {
 		this.profesorService.borrar(id);
 	}
 	
 	@GetMapping(path = "/consultarGenero")
-	public List<Profesor> buscarPorGenero(@RequestParam String genero){
+	public List<Profesor> buscarPorGenero(@RequestParam(required = false, defaultValue = "M") String genero){
 		return this.profesorService.buscarPorGenero(genero);
 	}
 }

@@ -8,7 +8,7 @@ public interface IEstudianteService {
 	// CRUD
 	public void guardar(Estudiante estudiante);
 	public void actualizar(Estudiante estudiante);
-	public void actualizarParcial(String apellido, String nombre, Integer id);
+	public void actualizarParcial(String nombre, String apellido, Integer id);
 	public Estudiante buscar(Integer id);
 	public void borrar(Integer id);
 	

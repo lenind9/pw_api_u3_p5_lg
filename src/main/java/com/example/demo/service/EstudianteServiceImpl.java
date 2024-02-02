@@ -27,9 +27,9 @@ public class EstudianteServiceImpl implements IEstudianteService {
 	}
 
 	@Override
-	public void actualizarParcial(String apellido, String nombre, Integer id) {
+	public void actualizarParcial(String nombre, String apellido, Integer id) {
 		// TODO Auto-generated method stub
-		this.estudianteRepository.actualizarParcial(apellido, nombre, id);
+		this.estudianteRepository.actualizarParcial(nombre, apellido, id);
 	}
 
 	@Override

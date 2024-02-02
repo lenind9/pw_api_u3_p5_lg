@@ -51,7 +51,7 @@ public class EstudianteControllerRestFul {
 	
 	@PatchMapping(path = "/{id}")
 	public void actualizarParcial(@RequestBody Estudiante estudiante, @PathVariable Integer id) {
-		this.estudianteService.actualizarParcial(estudiante.getApellido(), estudiante.getNombre(), id);
+		this.estudianteService.actualizarParcial(estudiante.getNombre(), estudiante.getApellido(), id);
 	}
 	
 	@DeleteMapping(path = "/{id}")
