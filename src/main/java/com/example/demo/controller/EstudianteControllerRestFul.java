@@ -3,6 +3,9 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -32,24 +35,25 @@ public class EstudianteControllerRestFul {
 	// Path Variable
 	// Verbo: GET
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/{cedula} GET
-	@GetMapping(path = "/{id}")
-	public Estudiante buscar(@PathVariable Integer id) {
-		return this.estudianteService.buscar(id);
+	@GetMapping(path = "/{id}", produces = "application/xml")
+	public ResponseEntity<Estudiante> buscar(@PathVariable Integer id) {
+		Estudiante estu = this.estudianteService.buscar(id);
+		return ResponseEntity.status(HttpStatus.OK).body(estu);
 	}
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/buscar
 	
-	@PostMapping
+	@PostMapping(consumes = MediaType.APPLICATION_XML_VALUE)
 	public void guardar(@RequestBody Estudiante estudiante) {
 		this.estudianteService.guardar(estudiante);
 	}
 	
-	@PutMapping(path = "/{id}")
+	@PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void actualizar(@RequestBody Estudiante estudiante, @PathVariable Integer id) {
 		estudiante.setId(id);
 	    this.estudianteService.actualizar(estudiante);
 	}
 	
-	@PatchMapping(path = "/{id}")
+	@PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void actualizarParcial(@RequestBody Estudiante estudiante, @PathVariable Integer id) {
 		this.estudianteService.actualizarParcial(estudiante.getNombre(), estudiante.getApellido(), id);
 	}
@@ -61,7 +65,7 @@ public class EstudianteControllerRestFul {
 	
 	// Consultar todos los estudiantes (retorna una lista)
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/consultarTodos?genero=M
-	@GetMapping(path = "/consultarTodos")
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Estudiante> consultarTodos(@RequestParam(required = false, defaultValue = "M") String genero) {
 		return this.estudianteService.buscarTodos(genero);
 	}

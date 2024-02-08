@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,9 +33,12 @@ public class ProfesorControllerRestFul {
 		this.profesorService.guardar(profesor);
 	}
 	
-	@GetMapping(path = "/{id}")
-	public Profesor buscar(@PathVariable Integer id) {
-		return this.profesorService.buscar(id);
+	@GetMapping(path = "/{id}", produces = "application/xml")
+	public ResponseEntity<Profesor> buscar(@PathVariable Integer id) {
+		// status code 240: grupo consumos exitosos (ya que hasta el 226 ya están usados)
+		// 240: Recurso Profesor encontrado satisfactoriamente
+		Profesor prof = this.profesorService.buscar(id);
+		return ResponseEntity.status(241).body(prof);
 	}
 	
 	@PutMapping(path = "/{id}")
@@ -53,7 +58,11 @@ public class ProfesorControllerRestFul {
 	}
 	
 	@GetMapping(path = "/consultarGenero")
-	public List<Profesor> buscarPorGenero(@RequestParam(required = false, defaultValue = "M") String genero){
-		return this.profesorService.buscarPorGenero(genero);
+	public ResponseEntity<List<Profesor>> buscarPorGenero(@RequestParam(required = false, defaultValue = "M") String genero){
+		List<Profesor> ls = this.profesorService.buscarPorGenero(genero);
+		HttpHeaders cabeceras = new HttpHeaders();
+		cabeceras.add("mensaje_242", "Lista consultada de manera satisfactoria");
+		cabeceras.add("mensaje_info", "El sistema va a estar en mantenimiento el fin de semana");
+		return new ResponseEntity<>(ls, cabeceras, 242);
 	}
 }
