@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,12 +29,12 @@ public class ProfesorControllerRestFul {
 	
 	// http://localhost:8080/API/v1.0/Matricula/profesores
 	
-	@PostMapping
+	@PostMapping(consumes = MediaType.APPLICATION_XML_VALUE)
 	public void guardar(@RequestBody Profesor profesor) {
 		this.profesorService.guardar(profesor);
 	}
 	
-	@GetMapping(path = "/{id}", produces = "application/xml")
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<Profesor> buscar(@PathVariable Integer id) {
 		// status code 240: grupo consumos exitosos (ya que hasta el 226 ya están usados)
 		// 240: Recurso Profesor encontrado satisfactoriamente
@@ -41,13 +42,13 @@ public class ProfesorControllerRestFul {
 		return ResponseEntity.status(241).body(prof);
 	}
 	
-	@PutMapping(path = "/{id}")
+	@PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_XML_VALUE)
 	public void actualizar(@RequestBody Profesor profesor, @PathVariable Integer id) {
 		profesor.setId(id);
 		this.profesorService.actualizar(profesor);
 	}
 	
-	@PatchMapping(path = "/{id}")
+	@PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_XML_VALUE)
 	public void actualizarParcial(@RequestBody Profesor profesor, @PathVariable Integer id) {
 		this.profesorService.actualizarParcial(id, profesor.getNombre(), profesor.getApellido());
 	}
@@ -57,7 +58,7 @@ public class ProfesorControllerRestFul {
 		this.profesorService.borrar(id);
 	}
 	
-	@GetMapping(path = "/consultarGenero")
+	@GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<List<Profesor>> buscarPorGenero(@RequestParam(required = false, defaultValue = "M") String genero){
 		List<Profesor> ls = this.profesorService.buscarPorGenero(genero);
 		HttpHeaders cabeceras = new HttpHeaders();

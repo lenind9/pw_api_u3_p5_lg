@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +36,7 @@ public class EstudianteControllerRestFul {
 	// Path Variable
 	// Verbo: GET
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/{cedula} GET
-	@GetMapping(path = "/{id}", produces = "application/xml")
+	@GetMapping(path = "/{id}", produces = MediaType.APPLICATION_XML_VALUE)
 	public ResponseEntity<Estudiante> buscar(@PathVariable Integer id) {
 		Estudiante estu = this.estudianteService.buscar(id);
 		return ResponseEntity.status(HttpStatus.OK).body(estu);
@@ -66,7 +67,10 @@ public class EstudianteControllerRestFul {
 	// Consultar todos los estudiantes (retorna una lista)
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/consultarTodos?genero=M
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public List<Estudiante> consultarTodos(@RequestParam(required = false, defaultValue = "M") String genero) {
-		return this.estudianteService.buscarTodos(genero);
+	public ResponseEntity<List<Estudiante>> consultarTodos(@RequestParam(required = false, defaultValue = "M") String genero) {
+		List<Estudiante> ls = this.estudianteService.buscarTodos(genero);
+		HttpHeaders cabeceras = new HttpHeaders();
+		cabeceras.add("mensaje_242", "Lista consultada de manera satisfactoria");
+		return new ResponseEntity<>(ls, cabeceras, 242);
 	}
 }
