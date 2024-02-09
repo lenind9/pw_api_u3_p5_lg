@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.repository.modelo.Estudiante;
 import com.example.demo.service.IEstudianteService;
+import com.example.demo.service.IMateriaService;
+import com.example.demo.service.to.EstudianteTO;
+import com.example.demo.service.to.MateriaTO;
 
 // API: determinada por el proyecto java
 // Servicio -> Controller: clase Controller
@@ -30,6 +33,9 @@ public class EstudianteControllerRestFul {
 	
 	@Autowired
 	private IEstudianteService estudianteService;
+	
+	@Autowired
+	private IMateriaService materiaService;
 	
 	// Metodos: Capacidades
 	
@@ -66,11 +72,24 @@ public class EstudianteControllerRestFul {
 	
 	// Consultar todos los estudiantes (retorna una lista)
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/consultarTodos?genero=M
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(path = "/tmp", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<Estudiante>> consultarTodos(@RequestParam(required = false, defaultValue = "M") String genero) {
 		List<Estudiante> ls = this.estudianteService.buscarTodos(genero);
 		HttpHeaders cabeceras = new HttpHeaders();
 		cabeceras.add("mensaje_242", "Lista consultada de manera satisfactoria");
 		return new ResponseEntity<>(ls, cabeceras, 242);
+	}
+	
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<EstudianteTO>> consultarTodosHateoas() {
+		List<EstudianteTO> ls = this.estudianteService.buscarTodosTO();
+		return ResponseEntity.status(HttpStatus.OK).body(ls);
+	}
+	
+	// http://localhost:8080/API/v1.0/Matricula/estudiantes/1/materias
+	@GetMapping(path = "/{id}/materias", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<MateriaTO>> consultarMateriasPorId(@PathVariable Integer id){
+		List<MateriaTO> ls = this.materiaService.buscarPorIdEstudiante(id);
+		return ResponseEntity.status(HttpStatus.OK).body(ls);
 	}
 }
