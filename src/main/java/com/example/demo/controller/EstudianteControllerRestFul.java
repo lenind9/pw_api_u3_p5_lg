@@ -42,8 +42,8 @@ public class EstudianteControllerRestFul {
 	@Autowired
 	private IMateriaService materiaService;
 
+	/////////////////////////// CRUD /////////////////////////////////////////
 	// Metodos: Capacidades
-
 	// Path Variable
 	// Verbo: GET
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/{cedula} GET
@@ -88,6 +88,8 @@ public class EstudianteControllerRestFul {
 	public void borrar(@PathVariable Integer id) {
 		this.estudianteService.borrar(id);
 	}
+	
+	////////////////////////////////////////////////////////////////////////
 
 	// Consultar todos los estudiantes (retorna una lista)
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/consultarTodos?genero=M
