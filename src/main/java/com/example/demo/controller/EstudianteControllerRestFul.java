@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.repository.modelo.Estudiante;
 import com.example.demo.service.IEstudianteService;
 import com.example.demo.service.IMateriaService;
+import com.example.demo.service.to.EstudianteLigeroTO;
 import com.example.demo.service.to.EstudianteTO;
 import com.example.demo.service.to.MateriaTO;
 
@@ -57,9 +58,17 @@ public class EstudianteControllerRestFul {
 		estu.add(link2);
 		return ResponseEntity.status(HttpStatus.OK).body(estu);
 	}
-	// http://localhost:8080/API/v1.0/Matricula/estudiantes/buscar
+	
+	@GetMapping(path = "/ligero/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<EstudianteLigeroTO> buscarLigeroTO(@PathVariable Integer id) {
+		EstudianteLigeroTO estuTo = this.estudianteService.buscarLigeroTO(id);
+		Link link = linkTo(methodOn(EstudianteControllerRestFul.class).buscarLigeroTO(estuTo.getId()))
+				.withSelfRel();
+		estuTo.add(link);
+		return ResponseEntity.status(HttpStatus.OK).body(estuTo);
+	}
 
-	@PostMapping(consumes = MediaType.APPLICATION_XML_VALUE)
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	public void guardar(@RequestBody Estudiante estudiante) {
 		this.estudianteService.guardar(estudiante);
 	}
@@ -106,6 +115,16 @@ public class EstudianteControllerRestFul {
 	@GetMapping(path = "/{id}/materias", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<MateriaTO>> consultarMateriasPorId(@PathVariable Integer id) {
 		List<MateriaTO> ls = this.materiaService.buscarPorIdEstudiante(id);
+		return ResponseEntity.status(HttpStatus.OK).body(ls);
+	}
+	
+	@GetMapping(path = "/ligero", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<EstudianteLigeroTO>> consultarTodosHateoasLigero() {
+		List<EstudianteLigeroTO> ls = this.estudianteService.buscarTodosLigeroTO();
+		for (EstudianteLigeroTO est : ls) {
+			Link link = linkTo(methodOn(EstudianteControllerRestFul.class).consultarMateriasPorId(est.getId())).withSelfRel();
+			est.add(link);
+		}
 		return ResponseEntity.status(HttpStatus.OK).body(ls);
 	}
 }
