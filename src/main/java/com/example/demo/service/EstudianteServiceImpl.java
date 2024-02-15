@@ -18,15 +18,15 @@ public class EstudianteServiceImpl implements IEstudianteService {
 	private IEstudianteRepository estudianteRepository;
 
 	@Override
-	public void guardar(Estudiante estudiante) {
+	public void guardar(EstudianteTO estudianteTO) {
 		// TODO Auto-generated method stub
-		this.estudianteRepository.insertar(estudiante);
+		this.estudianteRepository.insertar(this.convertirTOaEstudiante(estudianteTO));
 	}
 
 	@Override
-	public void actualizar(Estudiante estudiante) {
+	public void actualizar(EstudianteTO estudianteTO) {
 		// TODO Auto-generated method stub
-		this.estudianteRepository.actualizar(estudiante);
+		this.estudianteRepository.actualizar(this.convertirTOaEstudiante(estudianteTO));
 	}
 
 	@Override
@@ -48,9 +48,9 @@ public class EstudianteServiceImpl implements IEstudianteService {
 	}
 
 	@Override
-	public List<Estudiante> buscarTodos(String genero) {
+	public List<Estudiante> buscarTodosGenero(String genero) {
 		// TODO Auto-generated method stub
-		return this.estudianteRepository.consultarTodos(genero);
+		return this.estudianteRepository.consultarTodosGenero(genero);
 	}
 
 	private EstudianteTO convertir(Estudiante estu) {
@@ -75,10 +75,25 @@ public class EstudianteServiceImpl implements IEstudianteService {
 		return estuLTO;
 	}
 	
+	private Estudiante convertirTOaEstudiante(EstudianteTO estuTO) {
+		Estudiante estu = new Estudiante();
+		estu.setApellido(estuTO.getApellido());
+		estu.setFechaNacimiento(estuTO.getFechaNacimiento());
+		estu.setGenero(estuTO.getGenero());
+		estu.setId(estuTO.getId());
+		estu.setNombre(estuTO.getNombre());
+		estu.setDireccion(estuTO.getDireccion());
+		estu.setCorreoElectronico(estuTO.getCorreoElectronico());
+		estu.setEdad(estuTO.getEdad());
+		estu.setTelefono(estuTO.getTelefono());
+		estu.setCarrera(estuTO.getCarrera());
+		return estu;
+	}
+	
 	@Override
 	public List<EstudianteTO> buscarTodosTO() {
 		// TODO Auto-generated method stub
-		List<Estudiante> ls = this.estudianteRepository.consultarTodos("M");
+		List<Estudiante> ls = this.estudianteRepository.consultarTodos();
 		List<EstudianteTO> lsFinal = new ArrayList<>();
 		for(Estudiante estu : ls) {
 			lsFinal.add(this.convertir(estu));
@@ -95,7 +110,7 @@ public class EstudianteServiceImpl implements IEstudianteService {
 	@Override
 	public List<EstudianteLigeroTO> buscarTodosLigeroTO() {
 		// TODO Auto-generated method stub
-		List<Estudiante> ls = this.estudianteRepository.consultarTodos("M");
+		List<Estudiante> ls = this.estudianteRepository.consultarTodos();
 		List<EstudianteLigeroTO> lsFinal = new ArrayList<>();
 		for(Estudiante estu : ls) {
 			lsFinal.add(this.convertirLigero(this.convertir(estu)));

@@ -8,13 +8,13 @@ import com.example.demo.service.to.EstudianteTO;
 
 public interface IEstudianteService {
 	// CRUD
-	public void guardar(Estudiante estudiante);
-	public void actualizar(Estudiante estudiante);
+	public void guardar(EstudianteTO estudiante);
+	public void actualizar(EstudianteTO estudiante);
 	public void actualizarParcial(String nombre, String apellido, Integer id);
 	public Estudiante buscar(Integer id);
 	public void borrar(Integer id);
 	
-	public List<Estudiante> buscarTodos(String genero);
+	public List<Estudiante> buscarTodosGenero(String genero);
 	
 	public List<EstudianteTO> buscarTodosTO();
 	public EstudianteTO buscarTO(Integer id);

@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -34,6 +35,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController // Servicio
 @RequestMapping(path = "/estudiantes")
+@CrossOrigin
+// (value = "http://localhost:8080")
 public class EstudianteControllerRestFul {
 
 	@Autowired
@@ -69,14 +72,14 @@ public class EstudianteControllerRestFul {
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void guardar(@RequestBody Estudiante estudiante) {
-		this.estudianteService.guardar(estudiante);
+	public void guardar(@RequestBody EstudianteTO estudianteTO) {
+		this.estudianteService.guardar(estudianteTO);
 	}
 
 	@PutMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public void actualizar(@RequestBody Estudiante estudiante, @PathVariable Integer id) {
-		estudiante.setId(id);
-		this.estudianteService.actualizar(estudiante);
+	public void actualizar(@RequestBody EstudianteTO estudianteTO, @PathVariable Integer id) {
+		estudianteTO.setId(id);
+		this.estudianteService.actualizar(estudianteTO);
 	}
 
 	@PatchMapping(path = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -91,17 +94,6 @@ public class EstudianteControllerRestFul {
 	
 	////////////////////////////////////////////////////////////////////////
 
-	// Consultar todos los estudiantes (retorna una lista)
-	// http://localhost:8080/API/v1.0/Matricula/estudiantes/consultarTodos?genero=M
-	@GetMapping(path = "/tmp", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Estudiante>> consultarTodos(
-			@RequestParam(required = false, defaultValue = "M") String genero) {
-		List<Estudiante> ls = this.estudianteService.buscarTodos(genero);
-		HttpHeaders cabeceras = new HttpHeaders();
-		cabeceras.add("mensaje_242", "Lista consultada de manera satisfactoria");
-		return new ResponseEntity<>(ls, cabeceras, 242);
-	}
-
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<EstudianteTO>> consultarTodosHateoas() {
 		List<EstudianteTO> ls = this.estudianteService.buscarTodosTO();
@@ -111,6 +103,17 @@ public class EstudianteControllerRestFul {
 			est.add(link);
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(ls);
+	}
+	
+	// Consultar todos los estudiantes por genero (retorna una lista)
+	// http://localhost:8080/API/v1.0/Matricula/estudiantes/consultarTodos?genero=M
+	@GetMapping(path = "/tmp", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<Estudiante>> consultarTodosGenero(
+			@RequestParam(required = false, defaultValue = "M") String genero) {
+		List<Estudiante> ls = this.estudianteService.buscarTodosGenero(genero);
+		HttpHeaders cabeceras = new HttpHeaders();
+		cabeceras.add("mensaje_242", "Lista consultada de manera satisfactoria");
+		return new ResponseEntity<>(ls, cabeceras, 242);
 	}
 
 	// http://localhost:8080/API/v1.0/Matricula/estudiantes/1/materias GET
