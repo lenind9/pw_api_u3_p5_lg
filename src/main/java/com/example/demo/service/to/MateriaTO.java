@@ -2,8 +2,6 @@ package com.example.demo.service.to;
 
 import java.io.Serializable;
 
-import jakarta.persistence.Column;
-
 public class MateriaTO implements Serializable {
 
 	/**
